@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Request Form</title>
+    <style>
+        #response-container {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .message, .response {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .message {
+            background-color: #f9f9f9;
+        }
+        .response {
+            background-color: #eef9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enter Text to Query LLM</h1>
+    <form method="post" action="{% url 'llm_request' %}">
+        {% csrf_token %}
+        <label for="content">Content:</label><br><br>
+        <textarea name="content" id="content" rows="10" cols="50">{{ content }}</textarea><br><br>
+        <input type="submit" value="Send">
+        <button type="submit" name="clear" value="clear">Clear Context</button>
+    </form>
+
+    <div id="response-container">
+        {% for entry in conversation_history %}
+            <div class="message">
+                <strong>User:</strong> {{ entry.message.content }}
+            </div>
+            <div class="response">
+                <strong>Response:</strong> {{ entry.response|safe }}
+            </div>
+        {% endfor %}
+    </div><br>
+    <a href="{% url 'view_chats' %}"><button>View Chat History</button></a>
+</body>
+</html>
